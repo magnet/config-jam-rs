@@ -1,0 +1,18 @@
+[package]
+name = "config-jam-macro"
+version = "0.1.0"
+authors = ["Simon Chemouil <simon.chemouil@lambdacube.fr>"]
+license = "Apache-2.0 OR MIT"
+readme = "../README.md"
+edition = "2018"
+
+[dependencies]
+syn = {version= "0.15.26", features = ["full"] }
+synattra = "0.1.1"
+quote = "0.6.11"
+proc-macro2 = "0.4.27"
+heck = "0.3.1"
+indexmap = "1.0.2"
+
+[lib]
+proc-macro = true

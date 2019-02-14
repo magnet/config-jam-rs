@@ -1,0 +1,11 @@
+[package]
+name = "config-jam"
+version = "0.1.0"
+authors = ["Simon Chemouil <simon.chemouil@lambdacube.fr>"]
+license = "Apache-2.0 OR MIT"
+readme = "../README.md"
+edition = "2018"
+
+[dependencies]
+config-jam-macro = { path = "../config-jam-macro", version = "0.1.0"}
+lazy_static = "1.2"

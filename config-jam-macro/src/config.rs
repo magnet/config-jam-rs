@@ -169,7 +169,13 @@ impl Config {
         );
 
         syn::ItemStruct {
-            attrs: Vec::new(),
+            // In the view, we need to remove attibutes other than the documentation
+            attrs: self
+                .attrs
+                .iter()
+                .filter(|attr| attr.path.is_ident("doc"))
+                .cloned()
+                .collect(),
             vis: self.vis.clone(),
             struct_token: Token![struct](self.config_token.span.clone()),
             ident: Ident::new(&format!("{}{}", &self.ident, "View"), self.ident.span()),

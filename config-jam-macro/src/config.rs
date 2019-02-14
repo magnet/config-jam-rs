@@ -1,5 +1,11 @@
 use proc_macro::TokenStream;
 use proc_macro2::Span;
+use syn::{
+    parse::Parse, parse::ParseStream, punctuated::Punctuated, token::Brace, token::Colon,
+    Attribute, Expr, Generics, Ident, Lifetime, PathSegment, Result, Type, TypeReference,
+    Visibility,
+};
+
 
 pub fn config(item: TokenStream) -> syn::Result<TokenStream> {
     let config_struct: Config = syn::parse(item)?;
@@ -119,11 +125,6 @@ pub fn config(item: TokenStream) -> syn::Result<TokenStream> {
     Ok(ts.into())
 }
 
-use syn::{
-    parse::Parse, parse::ParseStream, punctuated::Punctuated, token::Brace, token::Colon,
-    Attribute, Expr, Generics, Ident, Lifetime, PathSegment, Result, Type, TypeReference,
-    Visibility,
-};
 
 mod kw {
     syn::custom_keyword!(config);
@@ -237,7 +238,13 @@ impl ConfigField {
 
     pub fn to_lifetimed_field(&self, lifetime: &Lifetime) -> syn::Field {
         syn::Field {
-            attrs: self.attrs.clone(),
+            // In the view, we need to remove attibutes other than the documentation
+            attrs: self
+                .attrs
+                .iter()
+                .filter(|attr| attr.path.is_ident("doc"))
+                .cloned()
+                .collect(),
             vis: self.vis.clone(),
             ident: Some(self.ident.clone()),
             colon_token: self.colon_token.clone(),

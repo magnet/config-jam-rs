@@ -13,6 +13,15 @@ pub config Foo {
     pub test: u32 = 42,
     pub required: u64
 }
+
+// We can add several configs
+#[derive(Debug, Default)]
+#[field_derive(Debug)]
+pub config Bar {
+    pub single: &'static str = "Bar",
+    // And we can have complex initializers
+    pub multiple: Vec<u32> = vec![42, 38]
+}
 }
 
 fn main() {
@@ -50,8 +59,14 @@ fn main() {
     // You can now use any field you like
     let some_val = dbg!(foo_base.get().barval);
     // do_something with some_val!
-}
 
+    let bar = Bar::default();
+    // Now read-only access with the same structure!
+    let bar = bar.get();
+
+    let s = dbg!(bar.single);
+    let m = dbg!(bar.multiple);
+}
 ```
 
 This program prints the following output:
@@ -82,7 +97,12 @@ Foo Base overriden by Foo TOML then Foo ENV:: FooView {
     test: 98,
     required: 9999
 }
-[src/main.rs:48] foo_base.get().barval = "Bazinga!"
+[src/main.rs:57] foo_base.get().barval = "Bazinga!"
+[src/main.rs:65] bar.single = "Bar"
+[src/main.rs:66] bar.multiple = [
+    42,
+    38
+]
 ```
 
 ## Required Rust version

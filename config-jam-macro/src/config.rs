@@ -8,7 +8,19 @@ use syn::{
 
 
 pub fn config(item: TokenStream) -> syn::Result<TokenStream> {
-    let config_struct: Config = syn::parse(item)?;
+     let config_vec: ConfigVec = syn::parse(item)?;
+
+    let mut ts = TokenStream::new();
+    for config_struct in config_vec.configs.into_iter() {
+        let config_ts = handle_config(config_struct)?;
+        ts.extend(config_ts);
+    }
+
+    Ok(ts)
+}
+
+pub fn handle_config(config_struct: Config) -> syn::Result<TokenStream> {
+   
 
     let mut ts = proc_macro2::TokenStream::new();
     use std::iter::FromIterator;
@@ -128,6 +140,24 @@ pub fn config(item: TokenStream) -> syn::Result<TokenStream> {
 
 mod kw {
     syn::custom_keyword!(config);
+}
+
+pub struct ConfigVec {
+    pub configs: Vec<Config>
+}
+
+impl Parse for ConfigVec {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let mut configs = Vec::new();
+
+        while !input.is_empty() {
+            let config = input.parse::<Config>()?;
+            configs.push(config);
+        }
+      
+        Ok(ConfigVec { configs })
+
+    }
 }
 
 pub struct Config {

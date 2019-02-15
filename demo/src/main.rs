@@ -2,14 +2,24 @@
 
 use config_jam::{config, OverrideWith};
 
+mod envy_test;
+
 config! {
+/// My Foo config
 #[derive(Debug, Default, Clone, OverrideWith, serde::Serialize, serde::Deserialize)]
 #[field_derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub config Foo {
+    /// A Value for this and that
+    /// TODO: Say it's optional. <--> inject default value here!
     pub barval: String = "Foo".into(),
+    /// A Test for this and that
+    /// TODO:  Say it's optional. <--> inject default value here!
     pub test: u32 = 42,
+    /// A Required value for this and that
+    /// TODO: Say it is required.    
     pub required: u64
 }
+
 
 // We can add several configs
 #[derive(Debug, Default)]
